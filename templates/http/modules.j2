@@ -71,6 +71,9 @@ gzip_min_length {{ gzip['min_length'] }};
 {% if gzip['proxied'] is defined %}
 gzip_proxied {{ 'off' if not gzip['proxied'] else (gzip['proxied'] if gzip['proxied'] is string else gzip['proxied'] | join(' ')) }};
 {% endif %}
+{% if gzip['static'] is defined %}{# ngx_http_gzip_static_module #}{# This does not belong here but we are making an exception #}
+gzip_static {{ (gzip['static'] | ternary('on', 'off')) if gzip['static'] is boolean else gzip['static'] if gzip['static'] == 'always' }};
+{% endif %}
 {% if gzip['types'] is defined %}
 gzip_types {{ gzip['types'] if gzip['types'] is string else gzip['types'] | join(' ') }};
 {% endif %}
@@ -254,8 +257,12 @@ mirror_request_body {{ mirror['request_body'] | ternary('on', 'off') }};
 
 {# NGINX HTTP RealIP -- ngx_http_realip_module #}
 {% macro realip(realip) %}
-{% if realip['set_real_ip_from'] is defined %}
+{% if realip['set_real_ip_from'] is defined and realip['set_real_ip_from'] is not mapping %}
+{% for set_real_ip_from in realip['set_real_ip_from'] if realip['set_real_ip_from'] is not string %}
+set_real_ip_from {{ set_real_ip_from }};
+{% else %}
 set_real_ip_from {{ realip['set_real_ip_from'] }};
+{% endfor %}
 {% endif %}
 {% if realip['real_ip_header'] is defined %}
 real_ip_header {{ realip['real_ip_header'] }};

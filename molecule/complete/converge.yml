@@ -53,7 +53,7 @@
                 - file: /var/log/nginx/molecule.log
                 - file: /var/log/nginx/error.log
                   level: notice
-              pid: /var/run/nginx.pid
+              pid: /run/nginx.pid
               daemon: true
               debug_points: abort
               env:
@@ -349,7 +349,7 @@
                 hide_header:
                   - Date
                   - X-Accel-Redirect
-                http_version: 1.1
+                http_version: '1.1'
                 ignore_client_abort: false
                 ignore_headers:
                   - X-Accel-Redirect
@@ -460,10 +460,11 @@
                 comp_level: 1
                 disable:
                   - '"msie6"'
-                http_version: 1.1
+                http_version: '1.1'
                 min_length: 20
                 proxied:
                   - expired
+                static: always
                 types:
                   - text/html
                 vary: false
@@ -759,6 +760,7 @@
         nginx_config_stream_template:
           - template_file: stream/default.conf.j2
             deployment_location: /etc/nginx/conf.d/streams/stream_default.conf
+            backup: true
             config:
               upstreams:
                 - name: stream_upstream
@@ -854,6 +856,24 @@
                   inactive: 20s
                   min_uses: 2
                   valid: 1m
+              map:
+                hash_bucket_size: 128
+                hash_max_size: 4096
+                mappings:
+                  - string: $hostname
+                    variable: $stream_name
+                    hostnames: true
+                    volatile: true
+                    content:
+                      - value: example.com
+                        new_value: 3
+                  - string: $host
+                    variable: $isblockaccess_ua
+                    content:
+                      - value: default
+                        new_value: 0
+                      - value: '"~jndi:ldap"'
+                        new_value: 2
               servers:
                 - core:
                     listen:

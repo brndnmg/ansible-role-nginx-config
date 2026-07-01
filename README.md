@@ -1,13 +1,13 @@
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-nginxinc.nginx__config-5bbdbf.svg)](https://galaxy.ansible.com/nginxinc/nginx_config)
-[![Molecule CI/CD](https://github.com/nginxinc/ansible-role-nginx-config/actions/workflows/molecule.yml/badge.svg)](https://github.com/nginxinc/ansible-role-nginx-config/actions/workflows/molecule.yml)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/nginxinc/ansible-role-nginx-config/badge)](https://securityscorecards.dev/viewer/?uri=github.com/nginxinc/ansible-role-nginx-config)
+[![Molecule CI/CD](https://github.com/nginx/ansible-role-nginx-config/actions/workflows/molecule.yml/badge.svg)](https://github.com/nginx/ansible-role-nginx-config/actions/workflows/molecule.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/nginx/ansible-role-nginx-config/badge)](https://securityscorecards.dev/viewer/?uri=github.com/nginx/ansible-role-nginx-config)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Community Support](https://badgen.net/badge/support/community/cyan?icon=awesome)](/SUPPORT.md)
 [![Community Forum](https://img.shields.io/badge/community-forum-009639?logo=discourse&link=https%3A%2F%2Fcommunity.nginx.org)](https://community.nginx.org)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](/CODE_OF_CONDUCT.md)
 
-# 👾 *Help make the NGINX config Ansible role better by participating in our [survey](https://forms.office.com/Pages/ResponsePage.aspx?id=L_093Ttq0UCb4L-DJ9gcUKLQ7uTJaE1PitM_37KR881UM0NCWkY5UlE5MUYyWU1aTUcxV0NRUllJSC4u)!* 👾
+# 👾 *Help make the NGINX config Ansible role better by participating in our [survey](https://forms.office.com/r/tyWCe7GkpT)!* 👾
 
 # Ansible NGINX Configuration Role
 
@@ -25,8 +25,8 @@ If you want to use this role, you will need to use a supported version of Ansibl
 For ease of use, you can install and/or upgrade Ansible core, Jinja2, and the aforementioned Ansible collections by running the following four commands on your Ansible host:
 
 ```bash
-pip install --upgrade -r https://raw.githubusercontent.com/nginxinc/ansible-role-nginx-config/main/.github/workflows/requirements/requirements_ansible.txt
-curl -O https://raw.githubusercontent.com/nginxinc/ansible-role-nginx-config/main/.github/workflows/requirements/requirements_collections.yml
+pip install --upgrade -r https://raw.githubusercontent.com/nginx/ansible-role-nginx-config/main/.github/workflows/requirements/requirements_ansible.txt
+curl -O https://raw.githubusercontent.com/nginx/ansible-role-nginx-config/main/.github/workflows/requirements/requirements_collections.yml
 ansible-galaxy install --force -r requirements_collections.yml
 rm -f requirements_collections.yml
 ```
@@ -44,11 +44,11 @@ This will also ensure you are deploying/running this role with a fully tested ve
     - name: ansible.posix
       version: 2.0.0
     - name: community.general
-      version: 10.4.0
+      version: 11.0.0
     - name: community.crypto # Only required if you plan to to test the NGINX Plus Molecule scenario
-      version: 2.26.0
+      version: 3.0.0
     - name: community.docker # Only required if you plan to use Molecule
-      version: 4.5.2
+      version: 4.6.1
   ```
 
 - Instructions on how to install Ansible core can be found in the [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#upgrading-ansible-from-version-2-9-and-older-to-version-2-10-or-later) docs.
@@ -79,7 +79,7 @@ If you want to contribute to this role, you will also need to install Ansible Li
 - For ease of use, you can install and/or upgrade Ansible Lint by running the following command on your Ansible host:
 
   ```bash
-  pip install -r https://raw.githubusercontent.com/nginxinc/ansible-role-nginx-config/main/.github/workflows/requirements/requirements_ansible_lint.txt
+  pip install -r https://raw.githubusercontent.com/nginx/ansible-role-nginx-config/main/.github/workflows/requirements/requirements_ansible_lint.txt
   ```
 
 #### Molecule (Optional)
@@ -88,18 +88,18 @@ If you want to contribute to this role, you will also need to install Ansible Li
 - Instructions on how to install Molecule can be found in the [Molecule website](https://molecule.readthedocs.io/en/latest/installation.html). *You will also need to install the Molecule plugins package and the Docker Python SDK.*
 - To run the NGINX Plus/App Protect config Molecule tests, you must copy your NGINX Plus/App Protect license to the role's Molecule [`common/files/license`](/molecule/common/files/license/) directory.
 
-  You can alternatively add your NGINX Plus/App Protect repository certificate and key to the local environment. Run the following commands to export these files as base64-encoded variables and execute the Molecule tests:
+  You can alternatively add your NGINX Plus/App Protect repository certificate and key to the local environment. Run the following commands to export these files as variables and execute the Molecule tests:
 
   ```bash
-  export NGINX_CRT=$( cat <path to your certificate file> | base64 )
-  export NGINX_KEY=$( cat <path to your key file> | base64 )
-  molecule test -s plus
+  export NGINX_CRT=$( cat <path to your certificate file> )
+  export NGINX_KEY=$( cat <path to your key file> )
+  molecule test -s api_plus
   ```
 
 - For ease of use, you can install and/or upgrade Molecule, the Molecule plugins package, and the Docker Python SDK by running the following command on your Ansible host:
 
   ```bash
-  pip install --upgrade -r https://raw.githubusercontent.com/nginxinc/ansible-role-nginx-config/main/.github/workflows/requirements/requirements_molecule.txt
+  pip install --upgrade -r https://raw.githubusercontent.com/nginx/ansible-role-nginx-config/main/.github/workflows/requirements/requirements_molecule.txt
   ```
 
 ## Role Installation
@@ -133,7 +133,7 @@ To use the role, include the following task in your playbook:
 To pull the latest edge commit of the role from GitHub, use:
 
 ```bash
-git clone https://github.com/nginxinc/ansible-role-nginx-config.git
+git clone https://github.com/nginx/ansible-role-nginx-config.git
 ```
 
 To use the role, include the following task in your playbook:
@@ -185,7 +185,7 @@ Working functional playbook examples can be found in the **[`molecule/`](/molecu
 
 You can find the Ansible NGINX Core collection of roles to install and configure NGINX Open Source, NGINX Plus, and NGINX App Protect [here](https://github.com/nginxinc/ansible-collection-nginx).
 
-You can find the Ansible NGINX role to install NGINX OSS and NGINX Plus [here](https://github.com/nginxinc/ansible-role-nginx).
+You can find the Ansible NGINX role to install NGINX OSS and NGINX Plus [here](https://github.com/nginx/ansible-role-nginx).
 
 You can find the Ansible NGINX App Protect role to install and configure NGINX App Protect WAF and NGINX App Protect DoS [here](https://github.com/nginxinc/ansible-role-nginx-app-protect).
 

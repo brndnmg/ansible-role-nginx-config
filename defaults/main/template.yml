@@ -36,7 +36,7 @@ nginx_config_main_template:
         # - /var/log/nginx/error.log
         # - file: /var/log/nginx/error.log  # Required
         #   level: notice
-      pid: /var/run/nginx.pid
+      pid: /run/nginx.pid
       # daemon: true  # Boolean
       # debug_points: abort  # Can be set to 'abort' or 'stop'
       # env:  # MALLOC_OPTIONS  # String, a list of strings, a dictionary, or a list of dictionaries. The 'variable' variable is only required when setting a 'value'.
@@ -66,6 +66,25 @@ nginx_config_main_template:
       worker_connections: 1024  # Number
     # include:  # String or a list of strings
     #   - /etc/nginx/modules.conf
+    mgmt:  # Configure NGINX management directives. Only required when using NGINX Plus >R33.
+      enforce_initial_report: true  # Boolean
+      license_token: license.jwt
+      # proxy: 123.456.789:8353
+      # proxy_username: username
+      # proxy_password: password
+      resolver:
+        address: 127.0.0.1  # Required -- String or a list of strings
+        valid: 30s
+        ipv4: true  # Boolean
+        ipv6: true  # Boolean
+        status_zone: mgmt_mem_zone
+      # ssl_crl: /path/to/file
+      # ssl_trusted_certificate: /path/to/file
+      ssl_verify: false  # Boolean
+      state_path: /var/lib/nginx/state
+      usage_report:
+        endpoint: product.connect.nginx.com
+        interval: 30m
     http:
       include:  # String or a list of strings
         - /etc/nginx/mime.types
@@ -436,7 +455,7 @@ nginx_config_http_template:
         headers_hash_bucket_size: 64
         headers_hash_max_size: 512
         hide_header: Date  # String or a list of strings
-        http_version: 1.1  # Can be set to '1.0' or '1.1'
+        http_version: '1.1'  # Can be set to '1.0' or '1.1'
         ignore_client_abort: false  # Boolean
         ignore_headers: X-Accel-Redirect  # String or a list of strings -- Can be set to 'X-Accel-Redirect', 'X-Accel-Expires', 'X-Accel-Limit-Rate', 'X-Accel-Buffering', 'X-Accel-Charset', 'Expires', 'Cache-Control', 'Set-Cookie' or 'Vary'
         intercept_errors: false  # Boolean
@@ -579,6 +598,7 @@ nginx_config_http_template:
         http_version: 1.1  # Can be set to '1.0' or '1.1'
         min_length: 20
         proxied: []  # String or a list of strings -- Can alternatively be set to 'false'
+        static: false  # Boolean or 'always'
         types: []  # String or a list of strings
         vary: false  # Boolean
       headers:  # Configure headers
@@ -774,6 +794,7 @@ nginx_config_stream_template_enable: false
 nginx_config_stream_template:
   - template_file: stream/default.conf.j2
     deployment_location: /etc/nginx/conf.d/streams/stream_default.conf
+    backup: true
     config:
       upstreams:  # Configure upstreams
         - name: stream_upstream  # Required
@@ -961,6 +982,17 @@ nginx_config_stream_template:
           inactive: 20s
           min_uses: 2  # Number
           valid: 1m
+      map:  # Configure maps -- Available only in the 'stream' context
+        hash_bucket_size: 64
+        hash_max_size: 2048
+        mappings:  # List of dictionaries
+          - string: $remote_addr  # Required
+            variable: $upstream  # Required
+            hostnames: false  # Boolean
+            volatile: false  # Boolean
+            content:  # Dictionary or list of dictionaries
+              - value: default
+                new_value: 0
       custom_directives:  # String or a list of strings. Custom directive for specific use cases not covered by templates. Note: You need to include each directive in its full form. Make sure you add a semi-colon or closing curly bracket at the end of each directive.
         - server {};
       servers:   # All previous modules are also available (when allowed) in the 'servers' context.
