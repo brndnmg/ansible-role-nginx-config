@@ -320,8 +320,8 @@ split_clients {{ split_clients['string'] }} {{ split_clients['variable'] }} {
 {# NGINX HTTP Sub Filter -- ngx_http_sub_module #}
 {% macro sub_filter(sub_filter) %}
 {% if sub_filter['sub_filters'] is defined %}
-{% for sub_filter in sub_filter['sub_filters'] if sub_filter['sub_filters'] is not mapping %}
-sub_filter {{ sub_filter['string'] }} {{ sub_filter['replacement'] }};
+{% for sub_filter_item in sub_filter['sub_filters'] if sub_filter['sub_filters'] is not mapping %}
+sub_filter {{ sub_filter_item['string'] }} {{ sub_filter_item['replacement'] }};
 {% else %}
 sub_filter {{ sub_filter['sub_filters']['string'] }} {{ sub_filter['sub_filters']['replacement'] }};
 {% endfor %}
